@@ -1,0 +1,12 @@
+# Next.js
+.next/
+out/
+node_modules/
+.env.local
+
+# Convex
+.convex/
+
+# OS
+.DS_Store
+Thumbs.db
