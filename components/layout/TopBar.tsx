@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useMonth } from "@/hooks/useMonth";
 import { MONTHS } from "@/lib/clusters";
 import { MonthPickerSheet } from "@/components/sheets/MonthPickerSheet";
 
-export function TopBar() {
+function TopBarInner() {
   const { mes, ano } = useMonth();
   const [open, setOpen] = useState(false);
 
@@ -61,5 +62,13 @@ export function TopBar() {
 
       <MonthPickerSheet open={open} onClose={() => setOpen(false)} />
     </>
+  );
+}
+
+export function TopBar() {
+  return (
+    <Suspense fallback={null}>
+      <TopBarInner />
+    </Suspense>
   );
 }
