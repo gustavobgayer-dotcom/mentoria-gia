@@ -18,7 +18,11 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "Sardinha Finance · AUVP",
   description: "Controle financeiro pessoal",
+};
+
+export const viewport = {
   themeColor: "#0a0f1e",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

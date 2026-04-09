@@ -30,6 +30,11 @@ body {
   overflow: hidden;
 }
 
+/* safe area for mobile browsers (iPhone notch / home indicator) */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* hide scrollbar but keep scroll */
 .scrollable {
   overflow-y: auto;
