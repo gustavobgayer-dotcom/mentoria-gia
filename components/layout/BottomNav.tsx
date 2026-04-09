@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { LayoutDashboard, Activity, ClipboardList, Settings } from "lucide-react";
@@ -11,16 +12,13 @@ const NAV_ITEMS = [
   { href: "/config",       label: "Config",      Icon: Settings },
 ];
 
-export function BottomNav() {
+function BottomNavInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const qs = searchParams.toString() ? `?${searchParams.toString()}` : "";
 
   return (
-    <nav
-      className="flex border-t pb-safe"
-      style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-    >
+    <>
       {NAV_ITEMS.map(({ href, label, Icon }) => {
         const active = pathname === href;
         return (
@@ -35,6 +33,19 @@ export function BottomNav() {
           </Link>
         );
       })}
+    </>
+  );
+}
+
+export function BottomNav() {
+  return (
+    <nav
+      className="flex border-t pb-safe"
+      style={{ background: "var(--surface)", borderColor: "var(--border)" }}
+    >
+      <Suspense fallback={null}>
+        <BottomNavInner />
+      </Suspense>
     </nav>
   );
 }
