@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { requireAuth } from "./_utils";
 
 const DEFAULT_CONFIG = {
   renda: 13340,
@@ -16,7 +17,11 @@ const DEFAULT_CONFIG = {
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    const config = await ctx.db.query("config").first();
+    const userId = await requireAuth(ctx);
+    const config = await ctx.db
+      .query("config")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique();
     return config ?? DEFAULT_CONFIG;
   },
 });
@@ -24,25 +29,31 @@ export const get = query({
 export const updateRenda = mutation({
   args: { renda: v.number() },
   handler: async (ctx, { renda }) => {
-    const config = await ctx.db.query("config").first();
+    const userId = await requireAuth(ctx);
+    const config = await ctx.db
+      .query("config")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique();
     if (config) {
       await ctx.db.patch(config._id, { renda });
     } else {
-      await ctx.db.insert("config", { ...DEFAULT_CONFIG, renda });
+      await ctx.db.insert("config", { ...DEFAULT_CONFIG, renda, userId });
     }
   },
 });
 
 export const updateClusterMetas = mutation({
-  args: {
-    clusterMetas: v.record(v.string(), v.number()),
-  },
+  args: { clusterMetas: v.record(v.string(), v.number()) },
   handler: async (ctx, { clusterMetas }) => {
-    const config = await ctx.db.query("config").first();
+    const userId = await requireAuth(ctx);
+    const config = await ctx.db
+      .query("config")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique();
     if (config) {
       await ctx.db.patch(config._id, { clusterMetas });
     } else {
-      await ctx.db.insert("config", { ...DEFAULT_CONFIG, clusterMetas });
+      await ctx.db.insert("config", { ...DEFAULT_CONFIG, clusterMetas, userId });
     }
   },
 });

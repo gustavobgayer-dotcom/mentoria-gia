@@ -1,12 +1,16 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { requireAuth } from "./_utils";
 
 export const list = query({
   args: { mes: v.number(), ano: v.number() },
   handler: async (ctx, { mes, ano }) => {
+    const userId = await requireAuth(ctx);
     return await ctx.db
       .query("lancamentos")
-      .withIndex("by_mes_ano", (q) => q.eq("mes", mes).eq("ano", ano))
+      .withIndex("by_user_mes_ano", (q) =>
+        q.eq("userId", userId).eq("mes", mes).eq("ano", ano)
+      )
       .collect();
   },
 });
@@ -22,13 +26,17 @@ export const add = mutation({
     pagamento: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("lancamentos", args);
+    const userId = await requireAuth(ctx);
+    return await ctx.db.insert("lancamentos", { ...args, userId });
   },
 });
 
 export const remove = mutation({
   args: { id: v.id("lancamentos") },
   handler: async (ctx, { id }) => {
+    const userId = await requireAuth(ctx);
+    const doc = await ctx.db.get(id);
+    if (!doc || doc.userId !== userId) throw new Error("Unauthorized");
     await ctx.db.delete(id);
   },
 });
@@ -36,8 +44,12 @@ export const remove = mutation({
 export const seed = mutation({
   args: {},
   handler: async (ctx) => {
-    const existing = await ctx.db.query("lancamentos").first();
-    if (existing) return; // já tem dados
+    const userId = await requireAuth(ctx);
+    const existing = await ctx.db
+      .query("lancamentos")
+      .withIndex("by_user_mes_ano", (q) => q.eq("userId", userId))
+      .first();
+    if (existing) return;
 
     const data = [
       { cluster: "Liberdade Financeira", tipo: "Futuro",        ident: "Investimento",        valor: 3335,   mes: 3, ano: 2025 },
@@ -79,7 +91,7 @@ export const seed = mutation({
     ];
 
     for (const item of data) {
-      await ctx.db.insert("lancamentos", item);
+      await ctx.db.insert("lancamentos", { ...item, userId });
     }
   },
 });

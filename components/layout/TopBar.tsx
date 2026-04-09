@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useMonth } from "@/hooks/useMonth";
 import { MONTHS } from "@/lib/clusters";
 import { MonthPickerSheet } from "@/components/sheets/MonthPickerSheet";
+import { UserButton } from "@clerk/nextjs";
 
 function TopBarInner() {
   const { mes, ano } = useMonth();
@@ -44,19 +45,22 @@ function TopBarInner() {
             </div>
           </div>
 
-          {/* Month pill */}
-          <button
-            onClick={() => setOpen(true)}
-            className="flex items-center gap-[5px] rounded-full px-3 py-[5px] text-xs transition-colors"
-            style={{
-              background: "var(--surface2)",
-              border: "1px solid var(--border2)",
-              color: "var(--green)",
-            }}
-          >
-            <span>{MONTHS[mes]} {ano}</span>
-            <ChevronDown size={12} strokeWidth={2.5} />
-          </button>
+          {/* Month pill + user */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOpen(true)}
+              className="flex items-center gap-[5px] rounded-full px-3 py-[5px] text-xs transition-colors"
+              style={{
+                background: "var(--surface2)",
+                border: "1px solid var(--border2)",
+                color: "var(--green)",
+              }}
+            >
+              <span>{MONTHS[mes]} {ano}</span>
+              <ChevronDown size={12} strokeWidth={2.5} />
+            </button>
+            <UserButton afterSignOutUrl="/sign-in" />
+          </div>
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, DM_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -33,7 +34,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${dmSans.variable} ${dmMono.variable}`}>
       <body style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-        <Providers>{children}</Providers>
+        <ClerkProvider>
+          <Providers>{children}</Providers>
+        </ClerkProvider>
       </body>
     </html>
   );
