@@ -59,7 +59,7 @@ function TopBarInner() {
               <span>{MONTHS[mes]} {ano}</span>
               <ChevronDown size={12} strokeWidth={2.5} />
             </button>
-            <UserButton afterSignOutUrl="/sign-in" />
+            <UserButton />
           </div>
         </div>
       </div>
