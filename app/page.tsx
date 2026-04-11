@@ -7,7 +7,6 @@ import { useMonth } from "@/hooks/useMonth";
 import { Shell } from "@/components/layout/Shell";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
-import { RendaCard } from "@/components/dashboard/RendaCard";
 import { SummaryGrid } from "@/components/dashboard/SummaryGrid";
 import { ClusterCards } from "@/components/dashboard/ClusterCards";
 import { AddTransactionSheet } from "@/components/sheets/AddTransactionSheet";
@@ -43,7 +42,6 @@ function DashboardContent() {
   return (
     <>
       <div className="flex-1 scrollable px-4 pt-4 pb-24">
-        <RendaCard renda={config.renda} />
         <SummaryGrid totalGasto={totalGasto} saldo={saldo} />
         <ClusterCards
           renda={config.renda}

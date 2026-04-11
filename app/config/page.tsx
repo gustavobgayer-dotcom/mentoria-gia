@@ -24,7 +24,10 @@ function ConfigContent() {
       >
         Percentuais por cluster
       </div>
-      <ClusterSliders clusterMetas={config.clusterMetas as Record<ClusterName, number>} />
+      <ClusterSliders
+        clusterMetas={config.clusterMetas as Record<ClusterName, number>}
+        renda={config.renda}
+      />
     </div>
   );
 }

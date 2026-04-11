@@ -1,5 +1,18 @@
+"use client";
+
+import { useState } from "react";
+import { Info } from "lucide-react";
 import { CLUSTER_DEFAULTS, CLUSTER_NAMES, type ClusterName } from "@/lib/clusters";
 import { fmt } from "@/lib/utils";
+
+const CLUSTER_INFO: Record<ClusterName, string> = {
+  "Liberdade Financeira": "Investimentos e ativos que constroem sua independência financeira no longo prazo. É o cluster mais importante da metodologia AUVP.",
+  "Custo Fixo": "Despesas essenciais e recorrentes: moradia, alimentação, saúde e contas fixas. O objetivo é mantê-las sob controle.",
+  "Conforto": "Gastos que elevam sua qualidade de vida, como academia, assinaturas e transporte. Conforto é permitido, desde que dentro do limite de gasto.",
+  "Metas": "Objetivos financeiros específicos de médio prazo, como viagens, equipamentos ou presentes planejados.",
+  "Prazeres": "Lazer, entretenimento e gastos que trazem alegria imediata. Importante para o equilíbrio financeiro e emocional.",
+  "Conhecimento": "Investimentos em educação, cursos e desenvolvimento pessoal. Quem investe em si mesmo colhe retornos para sempre.",
+};
 
 interface Props {
   renda: number;
@@ -8,13 +21,15 @@ interface Props {
 }
 
 export function ClusterCards({ renda, clusterMetas, totByCluster }: Props) {
+  const [openInfo, setOpenInfo] = useState<ClusterName | null>(null);
+
   return (
     <div>
       <div
         className="text-[10px] font-medium uppercase tracking-widest mb-[10px] mt-1"
         style={{ color: "var(--muted)", fontFamily: "var(--font-dm-mono)" }}
       >
-        Metas por cluster
+        Limites de gasto por cluster
       </div>
 
       {CLUSTER_NAMES.map((name) => {
@@ -25,12 +40,17 @@ export function ClusterCards({ renda, clusterMetas, totByCluster }: Props) {
         const ratio = meta > 0 ? realizado / meta : 0;
         const saldoCl = meta - realizado;
 
+        const pct = Math.round(ratio * 100);
+
         let badge: { label: string; cls: string };
         let barColor: string;
-        if (ratio > 1) {
+        if (pct > 100) {
           badge = { label: "Estourou", cls: "bg-[rgba(255,91,91,0.1)] text-[#ff5b5b]" };
           barColor = "#ff5b5b";
-        } else if (ratio > 0.85) {
+        } else if (pct === 100) {
+          badge = { label: "Limite Atingido", cls: "bg-[rgba(0,212,160,0.1)] text-[#00d4a0]" };
+          barColor = "#00d4a0";
+        } else if (pct > 85) {
           badge = { label: "Próximo", cls: "bg-[rgba(245,166,35,0.1)] text-[#f5a623]" };
           barColor = "#f5a623";
         } else {
@@ -39,6 +59,7 @@ export function ClusterCards({ renda, clusterMetas, totByCluster }: Props) {
         }
 
         const saldoColor = saldoCl >= 0 ? "#00d4a0" : "#ff5b5b";
+        const isInfoOpen = openInfo === name;
 
         return (
           <div
@@ -48,12 +69,21 @@ export function ClusterCards({ renda, clusterMetas, totByCluster }: Props) {
           >
             <div className="flex justify-between items-start mb-[10px]">
               <div>
-                <div className="text-sm font-medium">{name}</div>
+                <div className="flex items-center gap-[6px]">
+                  <div className="text-sm font-medium">{name}</div>
+                  <button
+                    onClick={() => setOpenInfo(isInfoOpen ? null : name)}
+                    className="flex items-center justify-center transition-opacity"
+                    style={{ color: isInfoOpen ? cfg.color : "var(--muted)", opacity: isInfoOpen ? 1 : 0.6 }}
+                  >
+                    <Info size={13} strokeWidth={2} />
+                  </button>
+                </div>
                 <div
                   className="text-[11px] mt-[2px]"
                   style={{ color: "var(--muted)", fontFamily: "var(--font-dm-mono)" }}
                 >
-                  {Math.round(metaPct * 100)}% · meta {fmt(meta)}
+                  {Math.round(metaPct * 100)}% · limite de gasto {fmt(meta)}
                 </div>
               </div>
               <span className={`text-[11px] font-medium px-[9px] py-[3px] rounded-full ${badge.cls}`}>
@@ -61,19 +91,38 @@ export function ClusterCards({ renda, clusterMetas, totByCluster }: Props) {
               </span>
             </div>
 
-            {/* Progress bar */}
-            <div className="h-[5px] rounded-full overflow-hidden" style={{ background: "var(--surface2)" }}>
+            {/* Info tooltip */}
+            {isInfoOpen && (
+              <div
+                className="text-[11px] leading-relaxed rounded-lg px-3 py-2 mb-[10px]"
+                style={{
+                  background: "var(--surface2)",
+                  border: `1px solid ${cfg.color}30`,
+                  color: "var(--muted)",
+                }}
+              >
+                {CLUSTER_INFO[name]}
+              </div>
+            )}
+
+            {/* Progress bar with % inside */}
+            <div className="h-5 rounded-full overflow-hidden relative" style={{ background: "var(--surface2)" }}>
               <div
                 className="h-full rounded-full transition-[width] duration-500"
                 style={{ width: `${Math.min(ratio, 1) * 100}%`, background: barColor }}
               />
+              <span
+                className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold"
+                style={{ color: "white", fontFamily: "var(--font-dm-mono)" }}
+              >
+                {pct}%
+              </span>
             </div>
 
             <div className="flex justify-between mt-2 text-xs" style={{ color: "var(--muted)" }}>
               <span>
                 Gasto: <strong style={{ color: "var(--text)", fontWeight: 500 }}>{fmt(realizado)}</strong>
               </span>
-              <span>{Math.round(ratio * 100)}% da meta</span>
               <span>
                 Saldo: <strong style={{ color: saldoColor, fontWeight: 500 }}>{fmt(saldoCl)}</strong>
               </span>

@@ -57,3 +57,44 @@ export const updateClusterMetas = mutation({
     }
   },
 });
+
+export const updateTipoRenda = mutation({
+  args: {
+    tipoRenda: v.string(),
+    rendaFixa: v.optional(v.number()),
+    diaRecebimentoFixo: v.optional(v.number()),
+    diaRecebimentoVariavel: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireAuth(ctx);
+    const config = await ctx.db
+      .query("config")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique();
+    if (config) {
+      await ctx.db.patch(config._id, args);
+    } else {
+      await ctx.db.insert("config", { ...DEFAULT_CONFIG, ...args, userId });
+    }
+  },
+});
+
+export const updatePersonalizacao = mutation({
+  args: {
+    tema: v.optional(v.string()),
+    moeda: v.optional(v.string()),
+    preferencias: v.optional(v.any()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await requireAuth(ctx);
+    const config = await ctx.db
+      .query("config")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique();
+    if (config) {
+      await ctx.db.patch(config._id, args);
+    } else {
+      await ctx.db.insert("config", { ...DEFAULT_CONFIG, ...args, userId });
+    }
+  },
+});

@@ -59,7 +59,14 @@ function TopBarInner() {
               <span>{MONTHS[mes]} {ano}</span>
               <ChevronDown size={12} strokeWidth={2.5} />
             </button>
-            <UserButton />
+            <UserButton
+              appearance={{
+                elements: {
+                  userPreviewMainIdentifier: { color: "white" },
+                  userPreviewSecondaryIdentifier: { color: "white" },
+                },
+              }}
+            />
           </div>
         </div>
       </div>
