@@ -70,3 +70,32 @@ body {
 .cl-footerActionText {
   color: #f0f4ff !important;
 }
+
+/* Manage Account — cobertura total desktop e mobile */
+[class*="cl-userProfile"] *,
+[class*="cl-modalContent"] *,
+[class*="cl-rootBox"] * {
+  color: #f0f4ff !important;
+}
+
+/* Exceções: inputs, botões primários e badges mantêm suas cores */
+[class*="cl-rootBox"] input,
+[class*="cl-modalContent"] input {
+  color: #f0f4ff !important;
+  background: #1a2235 !important;
+}
+[class*="cl-formButtonPrimary"] {
+  color: #0a0f1e !important;
+}
+[class*="cl-badge"] {
+  color: #00d4a0 !important;
+}
+[class*="cl-footerActionLink"] {
+  color: #00d4a0 !important;
+}
+[class*="cl-navbar"] {
+  background: #111827 !important;
+}
+[class*="cl-scrollBox"] {
+  background: #111827 !important;
+}
