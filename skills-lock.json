@@ -25,6 +25,11 @@
       "source": "get-convex/agent-skills",
       "sourceType": "github",
       "computedHash": "7cc29991c446d2ea574dc9abb5fb85c0c9a7f3ef3af4c94454eef45017bda794"
+    },
+    "database-schema-designer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "computedHash": "f23c909d45c6207e974dbce0db4c648de13d586abb37057cfec34d62f25bb526"
     }
   }
 }

@@ -45,3 +45,28 @@ body {
 .scrollable::-webkit-scrollbar {
   display: none;
 }
+
+/* Clerk customizations */
+[class*="cl-badge"] {
+  background: #ffffff !important;
+  color: #00d4a0 !important;
+  font-weight: 600 !important;
+}
+
+.cl-socialButtonsProviderIcon__github {
+  filter: brightness(0) invert(1) !important;
+}
+
+.cl-footerAction {
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.cl-footerAction__signIn,
+.cl-footerAction__signUp {
+  justify-content: center !important;
+}
+
+.cl-footerActionText {
+  color: #f0f4ff !important;
+}
