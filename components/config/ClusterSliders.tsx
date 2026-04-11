@@ -40,19 +40,31 @@ export function ClusterSliders({ clusterMetas: initial }: Props) {
 
       {/* Total */}
       <div
-        className="flex justify-between items-center rounded-lg px-4 py-3 mb-3"
-        style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
+        className="rounded-lg px-4 py-3 mb-3"
+        style={{
+          background: "var(--surface2)",
+          border: `1px solid ${total > 100 ? "var(--red)" : "var(--border)"}`,
+        }}
       >
-        <span className="text-xs" style={{ color: "var(--muted)" }}>Total alocado</span>
-        <span
-          className="text-[17px] font-semibold"
-          style={{
-            fontFamily: "var(--font-dm-mono)",
-            color: total === 100 ? "var(--green)" : "var(--red)",
-          }}
-        >
-          {total}%
-        </span>
+        <div className="flex justify-between items-center">
+          <span className="text-xs" style={{ color: total > 100 ? "var(--red)" : "var(--muted)" }}>
+            {total > 100 ? "⚠️ Total alocado" : "Total alocado"}
+          </span>
+          <span
+            className="text-[17px] font-semibold"
+            style={{
+              fontFamily: "var(--font-dm-mono)",
+              color: total === 100 ? "var(--green)" : total > 100 ? "var(--red)" : "var(--muted)",
+            }}
+          >
+            {total}%
+          </span>
+        </div>
+        {total > 100 && (
+          <p className="text-[11px] mt-1" style={{ color: "var(--red)" }}>
+            O Total alocado deve ser no máximo 100%
+          </p>
+        )}
       </div>
 
       {CLUSTER_NAMES.map((name) => {
@@ -84,14 +96,14 @@ export function ClusterSliders({ clusterMetas: initial }: Props) {
             <input
               type="range"
               min={0}
-              max={60}
+              max={100}
               step={1}
               value={pct}
               onChange={(e) => handleSlider(name, Number(e.target.value))}
               className="w-full h-1 rounded-full appearance-none outline-none cursor-pointer"
               style={{
                 accentColor: cfg.color,
-                background: `linear-gradient(to right, ${cfg.color} ${pct / 60 * 100}%, var(--surface2) ${pct / 60 * 100}%)`,
+                background: `linear-gradient(to right, ${cfg.color} ${pct}%, var(--surface2) ${pct}%)`,
               }}
             />
           </div>

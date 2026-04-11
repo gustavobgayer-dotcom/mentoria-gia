@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { CLUSTER_DEFAULTS, CLUSTER_NAMES, MONTHS, type ClusterName } from "@/lib/clusters";
 import { fmt } from "@/lib/utils";
+import { EditTransactionSheet } from "@/components/sheets/EditTransactionSheet";
+import { Pencil } from "lucide-react";
 
 interface Lancamento {
   _id: Id<"lancamentos">;
@@ -14,6 +17,7 @@ interface Lancamento {
   valor: number;
   mes: number;
   ano: number;
+  pagamento?: string;
 }
 
 interface Props {
@@ -23,6 +27,7 @@ interface Props {
 }
 
 export function TransactionList({ lancamentos, mes, ano }: Props) {
+  const [editing, setEditing] = useState<Lancamento | null>(null);
   const remove = useMutation(api.lancamentos.remove);
 
   async function handleDelete(id: Id<"lancamentos">) {
@@ -48,6 +53,8 @@ export function TransactionList({ lancamentos, mes, ano }: Props) {
   });
 
   return (
+    <>
+    <EditTransactionSheet key={editing?._id} lancamento={editing} onClose={() => setEditing(null)} />
     <div>
       {CLUSTER_NAMES.map((cluster) => {
         const items = grouped[cluster];
@@ -93,8 +100,15 @@ export function TransactionList({ lancamentos, mes, ano }: Props) {
                   {fmt(item.valor)}
                 </div>
                 <button
+                  onClick={() => setEditing(item)}
+                  className="pl-2 opacity-40 hover:opacity-100 transition-opacity"
+                  style={{ color: "var(--muted)" }}
+                >
+                  <Pencil size={14} />
+                </button>
+                <button
                   onClick={() => handleDelete(item._id)}
-                  className="pl-2 text-lg opacity-40 hover:opacity-100 transition-opacity"
+                  className="pl-1 text-lg opacity-40 hover:opacity-100 transition-opacity"
                   style={{ color: "var(--muted)" }}
                 >
                   ×
@@ -105,5 +119,6 @@ export function TransactionList({ lancamentos, mes, ano }: Props) {
         );
       })}
     </div>
+    </>
   );
 }

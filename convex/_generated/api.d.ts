@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as _utils from "../_utils.js";
 import type * as configs from "../configs.js";
 import type * as lancamentos from "../lancamentos.js";
 
@@ -18,6 +19,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  _utils: typeof _utils;
   configs: typeof configs;
   lancamentos: typeof lancamentos;
 }>;

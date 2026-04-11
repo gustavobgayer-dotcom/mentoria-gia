@@ -22,7 +22,7 @@ export const get = query({
       .query("config")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
       .unique();
-    return config ?? DEFAULT_CONFIG;
+    return config ?? null;
   },
 });
 

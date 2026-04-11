@@ -8,6 +8,7 @@ import { Shell } from "@/components/layout/Shell";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { TransactionList } from "@/components/lancamentos/TransactionList";
+import { TemplateCards } from "@/components/lancamentos/TemplateCards";
 import { AddTransactionSheet } from "@/components/sheets/AddTransactionSheet";
 import { Plus } from "lucide-react";
 
@@ -15,14 +16,18 @@ function LancamentosContent() {
   const { mes, ano } = useMonth();
   const [fabOpen, setFabOpen] = useState(false);
   const lancamentos = useQuery(api.lancamentos.list, { mes, ano });
+  const config = useQuery(api.configs.get);
 
-  if (!lancamentos) {
+  if (!lancamentos || config === undefined) {
     return <div className="flex-1 flex items-center justify-center" style={{ color: "var(--muted)" }}>Carregando...</div>;
   }
 
   return (
     <>
       <div className="flex-1 scrollable px-4 pt-4 pb-24">
+        {config && (
+          <TemplateCards lancamentos={lancamentos} renda={config.renda} mes={mes} ano={ano} />
+        )}
         <div
           className="text-[10px] font-medium uppercase tracking-widest mb-[10px]"
           style={{ color: "var(--muted)", fontFamily: "var(--font-dm-mono)" }}

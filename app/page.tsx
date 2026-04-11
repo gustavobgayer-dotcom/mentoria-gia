@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useMonth } from "@/hooks/useMonth";
 import { Shell } from "@/components/layout/Shell";
@@ -13,6 +13,7 @@ import { ClusterCards } from "@/components/dashboard/ClusterCards";
 import { AddTransactionSheet } from "@/components/sheets/AddTransactionSheet";
 import { CLUSTER_NAMES, type ClusterName } from "@/lib/clusters";
 import { Plus } from "lucide-react";
+import { OnboardingScreen } from "@/components/onboarding/OnboardingScreen";
 
 function DashboardContent() {
   const { mes, ano } = useMonth();
@@ -21,8 +22,12 @@ function DashboardContent() {
   const config = useQuery(api.configs.get);
   const lancamentos = useQuery(api.lancamentos.list, { mes, ano });
 
-  if (!config || !lancamentos) {
+  if (config === undefined || !lancamentos) {
     return <div className="flex-1 flex items-center justify-center" style={{ color: "var(--muted)" }}>Carregando...</div>;
+  }
+
+  if (config === null) {
+    return <OnboardingScreen />;
   }
 
   const totByCluster = Object.fromEntries(
@@ -64,12 +69,22 @@ function DashboardContent() {
   );
 }
 
+function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading } = useConvexAuth();
+  if (isLoading || !isAuthenticated) {
+    return <div className="flex-1 flex items-center justify-center" style={{ color: "var(--muted)" }}>Carregando...</div>;
+  }
+  return <>{children}</>;
+}
+
 export default function DashboardPage() {
   return (
     <Shell>
       <TopBar />
       <Suspense fallback={null}>
-        <DashboardContent />
+        <AuthGuard>
+          <DashboardContent />
+        </AuthGuard>
       </Suspense>
       <BottomNav />
     </Shell>

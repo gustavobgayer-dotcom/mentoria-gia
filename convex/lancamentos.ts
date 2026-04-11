@@ -31,6 +31,23 @@ export const add = mutation({
   },
 });
 
+export const update = mutation({
+  args: {
+    id: v.id("lancamentos"),
+    cluster: v.string(),
+    tipo: v.string(),
+    ident: v.string(),
+    valor: v.number(),
+    pagamento: v.optional(v.string()),
+  },
+  handler: async (ctx, { id, ...fields }) => {
+    const userId = await requireAuth(ctx);
+    const doc = await ctx.db.get(id);
+    if (!doc || doc.userId !== userId) throw new Error("Unauthorized");
+    await ctx.db.patch(id, fields);
+  },
+});
+
 export const remove = mutation({
   args: { id: v.id("lancamentos") },
   handler: async (ctx, { id }) => {
