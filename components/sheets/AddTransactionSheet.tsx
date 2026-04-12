@@ -47,7 +47,7 @@ export function AddTransactionSheet({ open, onClose }: Props) {
     const cl = cluster as ClusterName;
     setForm((f) => ({
       ...f,
-      cluster,
+      cluster: cl,
       tipo: TIPO_OPTIONS[cl]?.[0] ?? "",
       tipoCustom: "",
     }));

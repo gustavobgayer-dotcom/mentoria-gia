@@ -27,7 +27,7 @@ function GraficosContent() {
     return <div className="flex-1 flex items-center justify-center" style={{ color: "var(--muted)" }}>Carregando...</div>;
   }
 
-  function buildTotals(items: typeof lancamentos) {
+  function buildTotals(items: NonNullable<typeof lancamentos>) {
     return Object.fromEntries(
       CLUSTER_NAMES.map((k) => [
         k,
