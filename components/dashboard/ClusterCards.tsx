@@ -6,12 +6,12 @@ import { CLUSTER_DEFAULTS, CLUSTER_NAMES, type ClusterName } from "@/lib/cluster
 import { fmt } from "@/lib/utils";
 
 const CLUSTER_INFO: Record<ClusterName, string> = {
-  "Liberdade Financeira": "Investimentos e ativos que constroem sua independência financeira no longo prazo. É o cluster mais importante da metodologia AUVP.",
-  "Custo Fixo": "Despesas essenciais e recorrentes: moradia, alimentação, saúde e contas fixas. O objetivo é mantê-las sob controle.",
-  "Conforto": "Gastos que elevam sua qualidade de vida, como academia, assinaturas e transporte. Conforto é permitido, desde que dentro do limite de gasto.",
-  "Metas": "Objetivos financeiros específicos de médio prazo, como viagens, equipamentos ou presentes planejados.",
-  "Prazeres": "Lazer, entretenimento e gastos que trazem alegria imediata. Importante para o equilíbrio financeiro e emocional.",
-  "Conhecimento": "Investimentos em educação, cursos e desenvolvimento pessoal. Quem investe em si mesmo colhe retornos para sempre.",
+  "Liberdade Financeira": "Aqui vai o dinheiro que trabalha por você: ações, fundos, previdência, tesouro direto. Quanto mais você coloca aqui cedo, mais rápido seu dinheiro cresce sem você precisar trabalhar por ele.",
+  "Custo Fixo": "São as contas que chegam todo mês independente do que você faz: aluguel, financiamento, escola dos filhos, plano de saúde, condomínio. O objetivo é manter esses gastos previsíveis e controlados.",
+  "Conforto": "Gastos que melhoram sua rotina: academia, streaming, alimentação fora de casa, transporte por app, farmácia. Ter conforto é importante — só não pode ultrapassar o seu limite.",
+  "Metas": "Dinheiro guardado para objetivos concretos: a viagem dos sonhos, trocar de carro, reformar a casa, um presente especial. Cada real aqui tem um destino certo no futuro próximo.",
+  "Prazeres": "Lazer puro e simples: shows, restaurantes, jogos, hobbies, passeios. Essa área existe porque você merece aproveitar a vida agora — sem culpa, dentro do limite.",
+  "Conhecimento": "Investimento em você mesmo: cursos, livros, workshops, mentorias. É o único investimento que ninguém pode tomar de você — e o retorno aparece por toda a vida.",
 };
 
 interface Props {

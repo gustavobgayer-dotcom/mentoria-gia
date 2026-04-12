@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Shell } from "@/components/layout/Shell";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
-import { Zap, TrendingUp, CreditCard, BarChart3, ShieldCheck, Sparkles } from "lucide-react";
+import { Zap, TrendingUp, CreditCard, BarChart3, ShieldCheck, Sparkles, Check, Users } from "lucide-react";
 
 const FEATURES = [
   {
@@ -34,6 +37,21 @@ const FEATURES = [
 ];
 
 export default function ProPage() {
+  const [loading, setLoading] = useState(false);
+  const onList = useQuery(api.waitlist.isOnList);
+  const totalOnList = useQuery(api.waitlist.count);
+  const joinWaitlist = useMutation(api.waitlist.add);
+
+  async function handleJoin() {
+    if (onList || loading) return;
+    setLoading(true);
+    try {
+      await joinWaitlist();
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <Shell>
       <TopBar />
@@ -87,7 +105,7 @@ export default function ProPage() {
           O que está incluído
         </div>
 
-        <div className="flex flex-col gap-2 mb-4">
+        <div className="flex flex-col gap-2 mb-6">
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
@@ -111,19 +129,49 @@ export default function ProPage() {
         </div>
 
         {/* CTA */}
-        <button
-          className="w-full py-[14px] rounded-xl text-[14px] font-semibold transition-opacity active:opacity-80"
-          style={{
-            background: "linear-gradient(135deg, #a855f7, #7c3aed)",
-            color: "white",
-            boxShadow: "0 4px 24px rgba(168,85,247,0.35)",
-          }}
-        >
-          Assinar Sardinha PRO
-        </button>
+        {onList ? (
+          /* Já na lista */
+          <div
+            className="w-full py-[14px] rounded-xl flex items-center justify-center gap-2"
+            style={{
+              background: "rgba(0,212,160,0.08)",
+              border: "1px solid rgba(0,212,160,0.3)",
+            }}
+          >
+            <Check size={16} color="#00d4a0" strokeWidth={2.5} />
+            <span className="text-[14px] font-semibold" style={{ color: "#00d4a0" }}>
+              Você está na lista de espera!
+            </span>
+          </div>
+        ) : (
+          <button
+            onClick={handleJoin}
+            disabled={loading}
+            className="w-full py-[14px] rounded-xl text-[14px] font-semibold transition-opacity active:opacity-80 disabled:opacity-50"
+            style={{
+              background: "linear-gradient(135deg, #a855f7, #7c3aed)",
+              color: "white",
+              boxShadow: "0 4px 24px rgba(168,85,247,0.35)",
+            }}
+          >
+            {loading ? "Entrando na lista..." : "Entrar na lista de espera"}
+          </button>
+        )}
+
+        {/* Contador */}
+        {typeof totalOnList === "number" && (
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <Users size={13} style={{ color: "var(--muted)" }} />
+            <p className="text-[12px]" style={{ color: "var(--muted)" }}>
+              <strong style={{ color: "var(--text)" }}>{totalOnList.toLocaleString("pt-BR")}</strong>
+              {" "}
+              {totalOnList === 1 ? "pessoa na" : "pessoas na"} lista de espera
+            </p>
+          </div>
+        )}
 
         <p className="text-[11px] text-center mt-2" style={{ color: "var(--muted)" }}>
-          Em breve · Lista de espera aberta
+          Gratuito · Você será avisado quando o PRO for lançado
         </p>
 
       </div>

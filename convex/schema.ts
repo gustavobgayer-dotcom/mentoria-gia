@@ -133,4 +133,9 @@ export default defineSchema({
     ano: v.number(),
     calculadoEm: v.number(),
   }).index("by_cargo_and_cluster_and_mes_and_ano", ["cargo", "cluster", "mes", "ano"]),
+
+  waitlist: defineTable({
+    userId: v.string(),
+    registradoEm: v.number(),
+  }).index("by_userId", ["userId"]),
 });

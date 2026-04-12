@@ -21,6 +21,7 @@ import type * as regrasCategorizacao from "../regrasCategorizacao.js";
 import type * as rendaHistorico from "../rendaHistorico.js";
 import type * as transacoesRaw from "../transacoesRaw.js";
 import type * as users from "../users.js";
+import type * as waitlist from "../waitlist.js";
 
 import type {
   ApiFromModules,
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   rendaHistorico: typeof rendaHistorico;
   transacoesRaw: typeof transacoesRaw;
   users: typeof users;
+  waitlist: typeof waitlist;
 }>;
 
 /**
