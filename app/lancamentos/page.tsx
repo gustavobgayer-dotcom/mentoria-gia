@@ -10,11 +10,13 @@ import { BottomNav } from "@/components/layout/BottomNav";
 import { TransactionList } from "@/components/lancamentos/TransactionList";
 import { TemplateCards } from "@/components/lancamentos/TemplateCards";
 import { AddTransactionSheet } from "@/components/sheets/AddTransactionSheet";
-import { Plus } from "lucide-react";
+import { ImportExcelSheet } from "@/components/sheets/ImportExcelSheet";
+import { Plus, Upload } from "lucide-react";
 
 function LancamentosContent() {
   const { mes, ano } = useMonth();
   const [fabOpen, setFabOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const lancamentos = useQuery(api.lancamentos.list, { mes, ano });
   const config = useQuery(api.configs.get);
 
@@ -37,7 +39,20 @@ function LancamentosContent() {
         <TransactionList lancamentos={lancamentos} mes={mes} ano={ano} />
       </div>
 
-      {/* FAB */}
+      {/* FAB — importar Excel */}
+      <button
+        onClick={() => setImportOpen(true)}
+        className="fixed bottom-[76px] right-[68px] w-[44px] h-[44px] rounded-full flex items-center justify-center z-50 transition-transform active:scale-95"
+        style={{
+          background: "var(--surface2)",
+          border: "1px solid var(--border2)",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+        }}
+      >
+        <Upload size={18} style={{ color: "var(--muted)" }} />
+      </button>
+
+      {/* FAB — novo lançamento */}
       <button
         onClick={() => setFabOpen(true)}
         className="fixed bottom-[76px] right-4 w-[52px] h-[52px] rounded-full flex items-center justify-center z-50 transition-transform active:scale-95"
@@ -50,6 +65,7 @@ function LancamentosContent() {
       </button>
 
       <AddTransactionSheet open={fabOpen} onClose={() => setFabOpen(false)} />
+      <ImportExcelSheet open={importOpen} onClose={() => setImportOpen(false)} />
     </>
   );
 }

@@ -58,6 +58,28 @@ export const remove = mutation({
   },
 });
 
+export const addBulk = mutation({
+  args: {
+    lancamentos: v.array(
+      v.object({
+        cluster: v.string(),
+        tipo: v.string(),
+        ident: v.string(),
+        valor: v.number(),
+        mes: v.number(),
+        ano: v.number(),
+        pagamento: v.optional(v.string()),
+      })
+    ),
+  },
+  handler: async (ctx, { lancamentos }) => {
+    const userId = await requireAuth(ctx);
+    for (const l of lancamentos) {
+      await ctx.db.insert("lancamentos", { ...l, userId });
+    }
+  },
+});
+
 export const seed = mutation({
   args: {},
   handler: async (ctx) => {
